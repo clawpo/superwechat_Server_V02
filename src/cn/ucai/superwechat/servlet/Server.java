@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -158,11 +159,14 @@ public class Server extends HttpServlet {
 			HttpServletResponse response) {
 		String userName = request.getParameter(I.User.USER_NAME);
 		String newNick = request.getParameter(I.User.NICK);
-		User user = biz.updateUserNickByUserName(userName, newNick);
-		ObjectMapper om = new ObjectMapper();
 		try {
+			newNick = new String(newNick.getBytes(I.ISON8859_1), I.UTF_8);
+			User user = biz.updateUserNickByUserName(userName, newNick);
+			ObjectMapper om = new ObjectMapper();
 			om.writeValue(response.getOutputStream(), user);
 		}catch(IOException e){
+			e.printStackTrace();
+		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
@@ -192,6 +196,12 @@ public class Server extends HttpServlet {
 	private void findGroupByName(HttpServletRequest request,
 			HttpServletResponse response) {
 		String groupName = request.getParameter(I.Group.NAME);
+		try {
+			groupName = new String(groupName.getBytes(I.ISON8859_1), I.UTF_8);
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		Group[] groups = biz.findGroupByGroupName(groupName);
 		ObjectMapper om = new ObjectMapper();
 		try {
