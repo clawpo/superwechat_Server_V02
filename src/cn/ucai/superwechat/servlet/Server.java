@@ -142,6 +142,11 @@ public class Server extends HttpServlet {
 		}
 	}
 	
+	/**
+	 * 根据用户账号更新用户密码
+	 * @param request
+	 * @param response
+	 */
 	private void updateUserPassowrdByName(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userName = request.getParameter(I.User.USER_NAME);
@@ -155,6 +160,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 根据用户账号更新用户昵称
+	 * @param request
+	 * @param response
+	 */
 	private void updateUserNickByName(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userName = request.getParameter(I.User.USER_NAME);
@@ -171,6 +181,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 根据群组环信id查找群组
+	 * @param request
+	 * @param response
+	 */
 	private void findGroupByHXID(HttpServletRequest request,
 			HttpServletResponse response) {
 		String hxid = request.getParameter(I.Group.HX_ID);
@@ -182,6 +197,12 @@ public class Server extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 根据群组id查找群组
+	 * @param request
+	 * @param response
+	 */
 	private void findGroupById(HttpServletRequest request,
 			HttpServletResponse response) {
 		String groupId = request.getParameter(I.Group.GROUP_ID);
@@ -193,6 +214,12 @@ public class Server extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 根据群组名称模糊查找群组集合
+	 * @param request
+	 * @param response
+	 */
 	private void findGroupByName(HttpServletRequest request,
 			HttpServletResponse response) {
 		String groupName = request.getParameter(I.Group.NAME);
@@ -211,6 +238,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 下载公开群组，并分页显示
+	 * @param request
+	 * @param response
+	 */
 	private void findPublicGroup(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userName = request.getParameter(I.User.USER_NAME);
@@ -225,6 +257,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 删除用户所有群组
+	 * @param request
+	 * @param response
+	 */
 	private void downloadAllGroups(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userName = request.getParameter(I.User.USER_NAME);
@@ -237,6 +274,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 删除群组
+	 * @param request
+	 * @param response
+	 */
 	private void deleteGroup(HttpServletRequest request,
 			HttpServletResponse response) {
 		String groupId = request.getParameter(I.Group.GROUP_ID);
@@ -249,6 +291,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 删除多个群组成员
+	 * @param request
+	 * @param response
+	 */
 	private void deleteGroupMembers(HttpServletRequest request,
 			HttpServletResponse response) {
 		String groupId = request.getParameter(I.Member.GROUP_ID);
@@ -266,6 +313,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 删除群组成员
+	 * @param request
+	 * @param response
+	 */
 	private void deleteGroupMember(HttpServletRequest request,
 			HttpServletResponse response) {
 		String groupId = request.getParameter(I.Member.GROUP_ID);
@@ -283,6 +335,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 下载群组成员，并分页显示
+	 * @param request
+	 * @param response
+	 */
 	private void downloadGroupMembersByLimit(HttpServletRequest request,
 			HttpServletResponse response) {
 		String groupId = request.getParameter(I.Member.GROUP_ID);
@@ -297,6 +354,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 删除多个群组成员
+	 * @param request
+	 * @param response
+	 */
 	private void downloadGroupMembers(HttpServletRequest request,
 			HttpServletResponse response) {
 		String groupId = request.getParameter(I.Member.GROUP_ID);
@@ -309,6 +371,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 更新群组名称
+	 * @param request
+	 * @param response
+	 */
 	private void updateGroupName(HttpServletRequest request,
 			HttpServletResponse response) {
 		String newGroupName = request.getParameter(I.Group.NAME);
@@ -322,6 +389,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 添加多个群组成员
+	 * @param request
+	 * @param response
+	 */
 	private void addGroupMembers(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userIds = request.getParameter(I.Member.USER_ID);
@@ -341,6 +413,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 添加群组成员
+	 * @param request
+	 * @param response
+	 */
 	private void addGroupMember(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userId = request.getParameter(I.Member.USER_ID);
@@ -362,6 +439,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 下载附近的用户集合
+	 * @param request
+	 * @param response
+	 */
 	private void downloadLocation(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userName = request.getParameter(I.Location.USER_NAME);
@@ -376,6 +458,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 更新用户地理位置
+	 * @param request
+	 * @param response
+	 */
 	private void updateLocation(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userId = request.getParameter(I.Location.USER_ID);
@@ -399,6 +486,11 @@ public class Server extends HttpServlet {
 		}
 	}
 	
+	/**
+	 * 上传用户地理位置
+	 * @param request
+	 * @param response
+	 */
 	private void uploadLocation(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userId = request.getParameter(I.Location.USER_ID);
@@ -421,6 +513,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 根据用户账号查找用户
+	 * @param request
+	 * @param response
+	 */
 	private void findUserByUserName(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userName = request.getParameter(I.User.USER_NAME);
@@ -433,6 +530,11 @@ public class Server extends HttpServlet {
 		}
 	}
 	
+	/**
+	 * 根据账号查找用户集合
+	 * @param request
+	 * @param response
+	 */
 	private void findUsersByUserName(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userName = request.getParameter(I.User.USER_NAME);
@@ -447,6 +549,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 根据昵称查找用户集合
+	 * @param request
+	 * @param response
+	 */
 	private void findUsersByNick(HttpServletRequest request,
 			HttpServletResponse response) {
 		String nick = request.getParameter(I.User.NICK);
@@ -461,6 +568,11 @@ public class Server extends HttpServlet {
 		}
 	}
 	
+	/**
+	 * 删除好友
+	 * @param request
+	 * @param response
+	 */
 	private void deleteContact(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userName = request.getParameter(I.Contact.USER_NAME);
@@ -474,6 +586,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 添加好友
+	 * @param request
+	 * @param response
+	 */
 	private void addContact(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userName = request.getParameter(I.Contact.USER_NAME);
@@ -487,6 +604,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 下载好友集合
+	 * @param request
+	 * @param response
+	 */
 	private void downloadContactList(HttpServletRequest request,
 			HttpServletResponse response) {
 		String userName = request.getParameter(I.Contact.USER_NAME);
@@ -501,6 +623,11 @@ public class Server extends HttpServlet {
 		 }
 	}
 
+	/**
+	 * 下载群组头像
+	 * @param request
+	 * @param response
+	 */
 	private void downloadGroupAvatar(HttpServletRequest request,
 			HttpServletResponse response) {
 		File file = null;
@@ -511,6 +638,11 @@ public class Server extends HttpServlet {
 		downloadAvatar(file, response);
 	}
 
+	/**
+	 * 下载用户头像
+	 * @param request
+	 * @param response
+	 */
 	private void downloadAvatar(HttpServletRequest request, HttpServletResponse response) {
 		File file = null;
 		String avatar = request.getParameter(I.AVATAR_TYPE);
@@ -520,6 +652,11 @@ public class Server extends HttpServlet {
 		downloadAvatar(file, response);
 	}
 	
+	/**
+	 * 下载头像图片
+	 * @param file
+	 * @param response
+	 */
 	private void downloadAvatar(File file, HttpServletResponse response){
 		if (!file.exists()) {
 			System.out.println("头像不存在");
@@ -544,6 +681,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 登陆
+	 * @param response
+	 * @param request
+	 */
 	private void login(HttpServletResponse response, HttpServletRequest request) {
 		ObjectMapper om = new ObjectMapper();
 		String userName = request.getParameter(I.User.USER_NAME);
@@ -560,6 +702,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 取消注册，删除账号和图片
+	 * @param request
+	 * @param response
+	 */
 	private void unRegister(HttpServletRequest request,
 			HttpServletResponse response) {
 		ObjectMapper om = new ObjectMapper();
@@ -612,6 +759,11 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 创建群组
+	 * @param request
+	 * @param response
+	 */
 	private void createGroup(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper om = new ObjectMapper();
 		boolean isSuccess = false;
@@ -661,6 +813,11 @@ public class Server extends HttpServlet {
 		
 	}
 
+	/**
+	 * 上传头像
+	 * @param request
+	 * @param response
+	 */
 	private void uploadAvatarByNameOrHXID(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper om = new ObjectMapper();
 		boolean isSuccess = false;
@@ -682,7 +839,11 @@ public class Server extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * 注册用户
+	 * @param request
+	 * @param response
+	 */
 	private void register(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper om = new ObjectMapper();
 		boolean isSuccess = false;
@@ -768,6 +929,10 @@ public class Server extends HttpServlet {
 		return true;
 	}
 	
+	/**
+	 * 关闭文件输出流
+	 * @param fos
+	 */
 	private void closeStream(FileOutputStream fos) {
 		try {
 			if(fos!=null){
@@ -778,6 +943,10 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 关闭文件输入流
+	 * @param fis
+	 */
 	private void closeStream(FileInputStream fis) {
 		try {
 			if(fis!=null){
