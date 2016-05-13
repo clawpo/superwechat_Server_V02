@@ -1,0 +1,780 @@
+package cn.ucai.superwechat.servlet;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import cn.ucai.superwechat.bean.Contact;
+import cn.ucai.superwechat.bean.Group;
+import cn.ucai.superwechat.bean.Location;
+import cn.ucai.superwechat.bean.Member;
+import cn.ucai.superwechat.bean.Message;
+import cn.ucai.superwechat.bean.User;
+import cn.ucai.superwechat.biz.ISuperWeChatBiz;
+import cn.ucai.superwechat.biz.SuperWeChatBiz;
+import cn.ucai.superwechat.utils.Utils;
+
+
+/**
+ * Servlet implementation class Server
+ * @author chen
+ *
+ */
+@WebServlet("/Server")
+public class Server extends HttpServlet {
+	private static final long serialVersionUID = -3135817168732302431L;
+	ISuperWeChatBiz biz;
+	
+	public Server(){
+		super();
+		biz = new SuperWeChatBiz();
+	}
+
+	protected void doGet(HttpServletRequest request, 
+			HttpServletResponse response) throws ServletException, IOException {
+		String requestType = request.getParameter(I.KEY_REQUEST);
+		System.out.println("doGet requestType="+requestType);
+		if(requestType == null){
+			return;
+		}
+		switch(requestType){
+		case I.REQUEST_SERVERSTATUS:
+			getServerStatus(request, response);
+			break;
+		case I.REQUEST_UNREGISTER:
+			unRegister(request,response);
+			break;
+		case I.REQUEST_LOGIN:
+			login(response, request);
+			break;
+		case I.REQUEST_DOWNLOAD_AVATAR:
+			downloadAvatar(request, response);
+			break;
+		case I.REQUEST_DOWNLOAD_GROUP_AVATAR:
+			downloadGroupAvatar(request, response);
+			break;
+		case I.REQUEST_DOWNLOAD_CONTACT_LIST:
+			downloadContactList(request, response);
+			break;
+		case I.REQUEST_ADD_CONTACT:
+			addContact(request, response);
+			break;
+		case I.REQUEST_DELETE_CONTACT:
+			deleteContact(request, response);
+			break;
+		case I.REQUEST_FIND_USER:
+			findUserByUserName(request, response);
+			break;
+		case I.REQUEST_FIND_USERS:
+			findUsersByUserName(request, response);
+			break;
+		case I.REQUEST_FIND_USERS_BY_NICK:
+			findUsersByNick(request, response);
+			break;
+		case I.REQUEST_UPLOAD_LOCATION:
+			uploadLocation(request, response);
+			break;
+		case I.REQUEST_UPDATE_LOCATION:
+			updateLocation(request, response);
+			break;
+		case I.REQUEST_DOWNLOAD_LOCATION:
+			downloadLocation(request, response);
+			break;
+		case I.REQUEST_ADD_GROUP_MEMBER:
+			addGroupMember(request,response);
+			break;
+		case I.REQUEST_ADD_GROUP_MEMBERS:
+			addGroupMembers(request,response);
+			break;
+		case I.REQUEST_UPDATE_GROUP_NAME:
+			updateGroupName(request,response);
+			break;
+		case I.REQUEST_DOWNLOAD_GROUP_MEMBERS:
+			downloadGroupMembers(request,response);
+			break;
+		case I.REQUEST_DOWNLOAD_GROUP_MEMBERS_BY_LIMIT:
+			downloadGroupMembersByLimit(request,response);
+			break;
+		case I.REQUEST_DELETE_GROUP_MEMBER:
+			deleteGroupMember(request,response);
+			break;
+		case I.REQUEST_DELETE_GROUP_MEMBERS:
+			deleteGroupMembers(request,response);
+			break;
+		case I.REQUEST_DELETE_GROUP:
+			deleteGroup(request,response);
+			break;
+		case I.REQUEST_DOWNLOAD_GROUPS:
+			downloadAllGroups(request,response);
+			break;
+		case I.REQUEST_FIND_PUBLIC_GROUPS:
+			findPublicGroup(request,response);
+			break;
+		case I.REQUEST_FIND_GROUP:
+			findGroupByName(request,response);
+			break;
+		case I.REQUEST_FIND_GROUP_BY_ID:
+			findGroupById(request,response);
+			break;
+		case I.REQUEST_FIND_GROUP_BY_HXID:
+			findGroupByHXID(request,response);
+			break;
+		case I.REQUEST_UPDATE_USER_NICK:
+			updateUserNickByName(request,response);
+			break;
+		case I.REQUEST_UPDATE_USER_PASSWORD:
+			updateUserPassowrdByName(request,response);
+			break;
+		}
+	}
+	
+	private void updateUserPassowrdByName(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userName = request.getParameter(I.User.USER_NAME);
+		String newPassword = request.getParameter(I.User.PASSWORD);
+		User user = biz.updateUserPasswordByUserName(userName, newPassword);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), user);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void updateUserNickByName(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userName = request.getParameter(I.User.USER_NAME);
+		String newNick = request.getParameter(I.User.NICK);
+		User user = biz.updateUserNickByUserName(userName, newNick);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), user);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void findGroupByHXID(HttpServletRequest request,
+			HttpServletResponse response) {
+		String hxid = request.getParameter(I.Group.HX_ID);
+		Group group = biz.findGroupByGroupHXID(hxid);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), group);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	private void findGroupById(HttpServletRequest request,
+			HttpServletResponse response) {
+		String groupId = request.getParameter(I.Group.GROUP_ID);
+		Group group = biz.findGroupByGroupId(Integer.parseInt(groupId));
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), group);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	private void findGroupByName(HttpServletRequest request,
+			HttpServletResponse response) {
+		String groupName = request.getParameter(I.Group.NAME);
+		Group[] groups = biz.findGroupByGroupName(groupName);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), groups);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void findPublicGroup(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userName = request.getParameter(I.User.USER_NAME);
+		int pageId = Integer.parseInt(request.getParameter(I.PAGE_ID));
+		int pageSize = Integer.parseInt(request.getParameter(I.PAGE_SIZE));
+		Group[] groups = biz.findPublicGroup(userName, pageId, pageSize);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), groups);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void downloadAllGroups(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userName = request.getParameter(I.User.USER_NAME);
+		Group[] groups = biz.findAllGroup(userName);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), groups);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void deleteGroup(HttpServletRequest request,
+			HttpServletResponse response) {
+		String groupId = request.getParameter(I.Group.GROUP_ID);
+		Message message = biz.deleteGroup(Integer.parseInt(groupId));
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), message);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void deleteGroupMembers(HttpServletRequest request,
+			HttpServletResponse response) {
+		String groupId = request.getParameter(I.Member.GROUP_ID);
+		String userName = request.getParameter(I.Member.USER_NAME);
+		boolean isSuccess = biz.deleteGroupMembers(Integer.parseInt(groupId), userName);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			if(isSuccess){
+				om.writeValue(response.getOutputStream(), new Message(true, I.MSG_GROUP_DELETE_MEMBER_SUCCESS));
+			} else {
+				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_GROUP_DELETE_MEMBER_FAIL));
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void deleteGroupMember(HttpServletRequest request,
+			HttpServletResponse response) {
+		String groupId = request.getParameter(I.Member.GROUP_ID);
+		String userName = request.getParameter(I.Member.USER_NAME);
+		boolean isSuccess = biz.deleteGroupMember(Integer.parseInt(groupId), userName);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			if(isSuccess){
+				om.writeValue(response.getOutputStream(), new Message(true, I.MSG_GROUP_DELETE_MEMBER_SUCCESS));
+			} else {
+				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_GROUP_DELETE_MEMBER_FAIL));
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void downloadGroupMembersByLimit(HttpServletRequest request,
+			HttpServletResponse response) {
+		String groupId = request.getParameter(I.Member.GROUP_ID);
+		int pageId = Integer.parseInt(request.getParameter(I.PAGE_ID));
+		int pageSize = Integer.parseInt(request.getParameter(I.PAGE_SIZE));
+		Member[] members = biz.downloadGroupMembers(Integer.parseInt(groupId), pageId, pageSize);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), members);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void downloadGroupMembers(HttpServletRequest request,
+			HttpServletResponse response) {
+		String groupId = request.getParameter(I.Member.GROUP_ID);
+		Member[] members = biz.downloadGroupMembers(Integer.parseInt(groupId));
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), members);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void updateGroupName(HttpServletRequest request,
+			HttpServletResponse response) {
+		String newGroupName = request.getParameter(I.Group.NAME);
+		String groupId = request.getParameter(I.Group.GROUP_ID);
+		Group group = biz.updateGroupName(Integer.parseInt(groupId), newGroupName);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), group);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void addGroupMembers(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userIds = request.getParameter(I.Member.USER_ID);
+		String userNames = request.getParameter(I.Member.USER_NAME);
+		String groupId = request.getParameter(I.Member.GROUP_ID);
+		String hxid = request.getParameter(I.Member.GROUP_HX_ID);
+		boolean isSuccess = biz.addGroupMembers(userIds,userNames,groupId,hxid);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			if(isSuccess){
+				om.writeValue(response.getOutputStream(), new Message(true, I.MSG_GROUP_ADD_MEMBER_SCUUESS));
+			} else {
+				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_GROUP_ADD_MEMBER_FAIL));
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void addGroupMember(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userId = request.getParameter(I.Member.USER_ID);
+		String userName = request.getParameter(I.Member.USER_NAME);
+		String groupId = request.getParameter(I.Member.GROUP_ID);
+		String hxid = request.getParameter(I.Member.GROUP_HX_ID);
+		Member member = new Member(Integer.parseInt(userId), userName, 
+				Integer.parseInt(groupId), hxid, I.PERMISSION_NORMAL);
+		boolean isSuccess = biz.addGroupMember(member);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			if(isSuccess){
+				om.writeValue(response.getOutputStream(), new Message(true, I.MSG_GROUP_ADD_MEMBER_SCUUESS));
+			} else {
+				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_GROUP_ADD_MEMBER_FAIL));
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void downloadLocation(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userName = request.getParameter(I.Location.USER_NAME);
+		int pageId = Integer.parseInt(request.getParameter(I.PAGE_ID));
+		int pageSize = Integer.parseInt(request.getParameter(I.PAGE_SIZE));
+		User[] users = biz.findUsers4Location(userName, pageId, pageSize);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), users);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void updateLocation(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userId = request.getParameter(I.Location.USER_ID);
+		String userName = request.getParameter(I.Location.USER_NAME);
+		String latitude = request.getParameter(I.Location.LATITUDE);
+		String longitude = request.getParameter(I.Location.LONGITUDE);
+		String isSearched = request.getParameter(I.Location.IS_SEARCHED);
+		Location location = new Location(Integer.parseInt(userId), userName, 
+				Double.parseDouble(latitude), Double.parseDouble(longitude), 
+				Boolean.parseBoolean(isSearched),System.currentTimeMillis()+"");
+		boolean isSuccess = biz.uploadUserLocation(location);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			if(isSuccess){
+				om.writeValue(response.getOutputStream(), new Message(true, I.MSG_LOCATION_UPDATE_SUCCESS));
+			} else {
+				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_LOCATION_UPDATE_FAIL));
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+	private void uploadLocation(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userId = request.getParameter(I.Location.USER_ID);
+		String userName = request.getParameter(I.Location.USER_NAME);
+		String latitude = request.getParameter(I.Location.LATITUDE);
+		String longitude = request.getParameter(I.Location.LONGITUDE);
+		Location location = new Location(Integer.parseInt(userId), userName, 
+				Double.parseDouble(latitude), Double.parseDouble(longitude), 
+				Utils.int2boolean(I.LOCATION_IS_SEARCH_ALLOW),System.currentTimeMillis()+"");
+		boolean isSuccess = biz.uploadUserLocation(location);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			if(isSuccess){
+				om.writeValue(response.getOutputStream(), new Message(true, I.MSG_LOCATION_UPLOAD_SUCCESS));
+			} else {
+				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_LOCATION_UPLOAD_FAIL));
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void findUserByUserName(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userName = request.getParameter(I.User.USER_NAME);
+		User user = biz.findUserByUserName(userName);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), user);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+	private void findUsersByUserName(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userName = request.getParameter(I.User.USER_NAME);
+		int pageId = Integer.parseInt(request.getParameter(I.PAGE_ID));
+		int pageSize = Integer.parseInt(request.getParameter(I.PAGE_SIZE));
+		User[] user = biz.findUsersByUserName(userName,pageId,pageSize);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), user);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void findUsersByNick(HttpServletRequest request,
+			HttpServletResponse response) {
+		String nick = request.getParameter(I.User.NICK);
+		int pageId = Integer.parseInt(request.getParameter(I.PAGE_ID));
+		int pageSize = Integer.parseInt(request.getParameter(I.PAGE_SIZE));
+		User[] user = biz.findUsersByNick(nick,pageId,pageSize);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), user);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+	private void deleteContact(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userName = request.getParameter(I.Contact.USER_NAME);
+		String name = request.getParameter(I.Contact.CU_NAME);
+		boolean isSuccess = biz.deleteContact(userName, name);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), isSuccess);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void addContact(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userName = request.getParameter(I.Contact.USER_NAME);
+		String name = request.getParameter(I.Contact.CU_NAME);
+		User user = biz.addContact(userName, name);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), user);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void downloadContactList(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userName = request.getParameter(I.Contact.USER_NAME);
+		int pageId = Integer.parseInt(request.getParameter(I.PAGE_ID));
+		int pageSize = Integer.parseInt(request.getParameter(I.PAGE_SIZE));
+		Contact[] contacts = biz.findContactsByUserName(userName, pageId, pageSize);
+		ObjectMapper om = new ObjectMapper();
+		 try {
+			 om.writeValue(response.getOutputStream(), contacts);
+		 }catch(IOException e){
+			 e.printStackTrace();
+		 }
+	}
+
+	private void downloadGroupAvatar(HttpServletRequest request,
+			HttpServletResponse response) {
+		File file = null;
+		String avatar = request.getParameter(I.AVATAR_TYPE);
+		file = new File(I.AVATAR_PATH + I.AVATAR_TYPE_GROUP_PATH 
+				+ I.BACKSLASH + avatar + I.AVATAR_SUFFIX_JPG);
+		System.out.println("file.path="+file.getPath());
+		downloadAvatar(file, response);
+	}
+
+	private void downloadAvatar(HttpServletRequest request, HttpServletResponse response) {
+		File file = null;
+		String avatar = request.getParameter(I.AVATAR_TYPE);
+		file = new File(I.AVATAR_PATH + I.AVATAR_TYPE_USER_PATH 
+				+ I.BACKSLASH + avatar + I.AVATAR_SUFFIX_JPG);
+		System.out.println("file.path="+file.getPath());
+		downloadAvatar(file, response);
+	}
+	
+	private void downloadAvatar(File file, HttpServletResponse response){
+		if (!file.exists()) {
+			System.out.println("头像不存在");
+			return;
+		}
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream(file);
+			ServletOutputStream out = response.getOutputStream();
+			int len;
+			byte[] buffer = new byte[1024];
+			while ((len = in.read(buffer)) != -1) {
+				out.write(buffer, 0, len);
+			}
+			System.out.println("头像下载完毕");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			closeStream(in);
+		}
+	}
+
+	private void login(HttpServletResponse response, HttpServletRequest request) {
+		ObjectMapper om = new ObjectMapper();
+		String userName = request.getParameter(I.User.USER_NAME);
+		String password = request.getParameter(I.User.PASSWORD);
+		User user = biz.login(userName, password);
+		try {
+			om.writeValue(response.getOutputStream(), user);
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void unRegister(HttpServletRequest request,
+			HttpServletResponse response) {
+		ObjectMapper om = new ObjectMapper();
+		String userName = request.getParameter(I.User.USER_NAME);
+		boolean isSuccess = biz.unRegister(userName);
+		try {
+			if(isSuccess){
+				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_UNREGISTER_SUCCESS));
+			} else {
+				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_UNREGISTER_FAIL));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 获得服务端连接状态，并返回给客户端
+	 * @param request
+	 * @param response
+	 */
+	private void getServerStatus(HttpServletRequest request,
+			HttpServletResponse response){
+		ObjectMapper om = new ObjectMapper();
+		Message msg = new Message(true,I.MSG_CONNECTION_SUCCESS);
+		try {
+			om.writeValue(response.getOutputStream(), msg);
+		}catch(JsonGenerationException e){
+			e.printStackTrace();
+		}catch(JsonMappingException e){
+			e.printStackTrace();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException,IOException{
+		String requestType = request.getParameter(I.KEY_REQUEST);
+		switch(requestType){
+			case I.REQUEST_REGISTER:
+				register(request, response);
+				break;
+			case I.REQUEST_UPLOAD_AVATAR:
+				uploadAvatarByNameOrHXID(request,response);
+				break;
+			case I.REQUEST_CREATE_GROUP:
+				createGroup(request,response);
+				break;
+		}
+	}
+
+	private void createGroup(HttpServletRequest request, HttpServletResponse response) {
+		ObjectMapper om = new ObjectMapper();
+		boolean isSuccess = false;
+		String hxid = request.getParameter(I.Group.HX_ID);
+		try {
+			if(biz.findGroupByGroupHXID(hxid)!=null){
+				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_GROUP_HXID_EXISTS));
+			} else {
+				isSuccess = uploadAvatar(hxid, I.AVATAR_TYPE_GROUP, request);
+				if(isSuccess){
+					String name = request.getParameter(I.Group.NAME);
+					String disc = request.getParameter(I.Group.DESCRIPTION);
+					disc = new String(disc.getBytes(I.ISON8859_1), I.UTF_8);
+					String owner = request.getParameter(I.Group.OWNER);
+					String isPublic = request.getParameter(I.Group.IS_PUBLIC);
+					String allowInvites = request.getParameter(I.Group.ALLOW_INVITES);
+					Group group = new Group(hxid, name, disc, owner, System.currentTimeMillis()+"",
+							I.GROUP_MAX_USERS_DEFAULT, I.GROUP_AFFILIATIONS_COUNT_DEFAULT, 
+							Boolean.parseBoolean(isPublic), Boolean.parseBoolean(allowInvites));
+					int id = biz.createGroup(group);
+					System.out.println("create group,id="+id);
+					if(id>0){
+						isSuccess = biz.updateAvatar(id, hxid, I.AVATAR_TYPE_GROUP);
+						if(isSuccess){
+							String userId = request.getParameter(I.User.USER_ID);
+							Member member = new Member(Integer.parseInt(userId), owner, id, hxid, I.PERMISSION_OWNER);
+							isSuccess = biz.addGroupMember(member);
+							if(isSuccess){
+								om.writeValue(response.getOutputStream(), new Message(true, I.MSG_GROUP_CREATE_SCUUESS));
+							} else {
+								om.writeValue(response.getOutputStream(), new Message(false, I.MSG_GROUP_ADD_MEMBER_FAIL));
+							}
+						} else {
+							om.writeValue(response.getOutputStream(), new Message(false, I.MSG_UPLOAD_AVATAR_FAIL));
+						}
+					}else{
+						om.writeValue(response.getOutputStream(), new Message(false, I.MSG_GROUP_CREATE_FAIL));
+					}
+				} else {
+					om.writeValue(response.getOutputStream(), new Message(false, I.MSG_UPLOAD_AVATAR_FAIL));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	private void uploadAvatarByNameOrHXID(HttpServletRequest request, HttpServletResponse response) {
+		ObjectMapper om = new ObjectMapper();
+		boolean isSuccess = false;
+		String type = request.getParameter(I.AVATAR_TYPE);
+		if(type.equals(I.AVATAR_TYPE_USER_PATH)) {
+			String userName = request.getParameter(I.User.USER_NAME);
+			isSuccess = uploadAvatar(userName, I.AVATAR_TYPE_USER, request);
+		} else {
+			String hxid = request.getParameter(I.Group.HX_ID);
+			isSuccess = uploadAvatar(hxid, I.AVATAR_TYPE_GROUP, request);
+		}
+		try {
+			if(isSuccess){
+				om.writeValue(response.getOutputStream(), new Message(true, I.MSG_UPLOAD_AVATAR_SUCCESS));
+			} else {
+				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_UPLOAD_AVATAR_FAIL));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void register(HttpServletRequest request, HttpServletResponse response) {
+		ObjectMapper om = new ObjectMapper();
+		boolean isSuccess = false;
+		// 步骤1-从request中获取userName、nick、password
+		String userName = request.getParameter(I.User.USER_NAME);
+		// 步骤2-验证用户名是否已经存在
+		try {
+			if (biz.findUserByUserName(userName) != null) {
+				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_REGISTER_USERNAME_EXISTS));
+			} else {
+				// 步骤3-上传头像图片
+				isSuccess = uploadAvatar(userName, I.AVATAR_TYPE_USER, request);
+				if(isSuccess) {
+					String nick = request.getParameter(I.User.NICK);
+					// 解决乱码问题
+					nick = new String(nick.getBytes(I.ISON8859_1), I.UTF_8);
+					String password = request.getParameter(I.User.PASSWORD);
+					// 步骤4-将三个数据封装在一个UserBean对象中
+					User user = new User(I.ID_DEFAULT,userName, nick, password,I.UN_READ_MSG_COUNT_DEFAULT);
+					// 步骤5-调用业务逻辑层的方法进行注册
+					int id = biz.register(user);
+					System.out.println("register user,id="+id);
+					// 步骤6-调用业务逻辑层的方法上传头像数据
+					if(id>0){
+						isSuccess = biz.updateAvatar(id, userName, I.AVATAR_TYPE_USER);
+						// 步骤7-将isSuccess发送给客户端
+						if(isSuccess){
+							om.writeValue(response.getOutputStream(), new Message(true, I.MSG_REGISTER_SUCCESS));
+						} else {
+							om.writeValue(response.getOutputStream(), new Message(false, I.MSG_UPLOAD_AVATAR_FAIL));
+						}
+					}else{
+						om.writeValue(response.getOutputStream(), new Message(false, I.MSG_REGISTER_FAIL));
+					}
+				} else {
+					om.writeValue(response.getOutputStream(), new Message(false, I.MSG_UPLOAD_AVATAR_FAIL));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	 
+	/**
+	 * 上传头像
+	 * @param name
+	 * @param type
+	 * @param request
+	 * @return
+	 */
+	private boolean uploadAvatar(String name, int type, HttpServletRequest request) {
+		String path;
+		switch (type) {
+		case I.AVATAR_TYPE_USER:
+			path = I.AVATAR_PATH + I.BACKSLASH + I.AVATAR_TYPE_USER_PATH;
+			break;
+		case I.AVATAR_TYPE_GROUP:
+		default:
+			path = I.AVATAR_PATH + I.BACKSLASH + I.AVATAR_TYPE_GROUP_PATH;
+			break;
+		}
+		String fileName = name + I.AVATAR_SUFFIX_JPG;
+		System.out.println("头像上传路径:" + path + fileName);
+		File file = new File(path,fileName);
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(file);
+			byte[] buffer = new byte[1024 * 8];
+			int len;
+			while ((len = request.getInputStream().read(buffer)) != -1) {
+				fos.write(buffer, 0, len);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		} finally{
+			closeStream(fos);
+		}
+		return true;
+	}
+	
+	private void closeStream(FileOutputStream fos) {
+		try {
+			if(fos!=null){
+				fos.close();
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void closeStream(FileInputStream fis) {
+		try {
+			if(fis!=null){
+				fis.close();
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
