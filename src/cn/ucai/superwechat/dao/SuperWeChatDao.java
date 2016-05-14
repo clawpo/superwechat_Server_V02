@@ -553,6 +553,103 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 	}
 
 	@Override
+	public Contact findContactById(int id) {
+		ResultSet set = null;
+		PreparedStatement statement = null;
+		Connection connection = JdbcUtils.getConnection();
+		String sql="select * from " + I.Contact.TABLE_NAME
+				+ SQL_QUERY_USER + SQL_QUERY_AVATAR
+				+ " where "+I.Contact.CONTACT_ID+"=?"
+				+ SQL_COMPARE_USER_ID_CONTACT
+				+ SQL_COMPARE_USER_ID_AVATAR
+				+ SQL_COMPARE_AVATAR_USER;
+		System.out.println("connection="+connection+",sql="+sql);
+		try {
+			statement=connection.prepareStatement(sql);
+			statement.setInt(1, id);
+			set=statement.executeQuery();
+			if(set.next()){
+				Contact c = new Contact();
+				readContact(set, c);
+				readUser(set, c);
+				readAvatar(set, c);
+				return c;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			JdbcUtils.closeAll(set, statement, connection);
+		}
+		return null;
+	}
+	@Override
+	public Contact[] findContactsByUserName(String userName) {
+		ResultSet set = null;
+		PreparedStatement statement = null;
+		Connection connection = JdbcUtils.getConnection();
+		String sql="select * from " + I.Contact.TABLE_NAME
+				+ SQL_QUERY_USER + SQL_QUERY_AVATAR
+				+ " where "+I.Contact.USER_NAME+"=?"
+				+ SQL_COMPARE_USER_ID_CONTACT
+				+ SQL_COMPARE_USER_ID_AVATAR
+				+ SQL_COMPARE_AVATAR_USER;
+		System.out.println("connection="+connection+",sql="+sql);
+		try {
+			statement=connection.prepareStatement(sql);
+			statement.setString(1, userName);
+			set=statement.executeQuery();
+			Contact[] contacts=new Contact[0];
+			while(set.next()){
+				Contact c = new Contact();
+				readContact(set, c);
+				readUser(set, c);
+				readAvatar(set, c);
+				contacts=Utils.add(contacts, c);
+			}
+			return contacts;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			JdbcUtils.closeAll(set, statement, connection);
+		}
+		return null;
+	}
+
+	@Override
+	public Contact[] findContactListByMyuid(int myuid) {
+		ResultSet set=null;
+		PreparedStatement statement=null;
+		Connection connection = JdbcUtils.getConnection();
+		String sql="select * from " + I.Contact.TABLE_NAME
+				+ SQL_QUERY_USER + SQL_QUERY_AVATAR
+				+ " where "+I.Contact.USER_ID+"=?"
+				+ SQL_COMPARE_USER_ID_CONTACT
+				+ SQL_COMPARE_USER_ID_AVATAR
+				+ SQL_COMPARE_AVATAR_USER;
+		System.out.println("connection="+connection+",sql="+sql);
+		try {
+			statement=connection.prepareStatement(sql);
+			statement.setInt(1, myuid);
+			set=statement.executeQuery();
+			Contact[] contacts=new Contact[0];
+			while(set.next()){
+				Contact c = new Contact();
+				readContact(set, c);
+				readUser(set, c);
+				readAvatar(set, c);
+				contacts=Utils.add(contacts, c);
+			}
+			return contacts;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			JdbcUtils.closeAll(set, statement, connection);
+		}
+		
+		return null;
+	}
+
+	@Override
 	public Contact[] findContactsByUserName(String userName, int pageId, int pageSize) {
 		ResultSet set = null;
 		PreparedStatement statement = null;
@@ -624,19 +721,21 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 		
 		return null;
 	}
-
 	@Override
-	public User addContact(String userName, String name) {
+	public Contact addContact(String userName, String name) {
 		boolean existsContact = isExistsContact(userName, name);
-		User user = new User();
+		Contact contact = new Contact();
 		if(existsContact){
 			System.out.println("已经是联系人");
-			user.setResult(false);
-			user.setMsg(I.MSG_CONTACT_FIRENDED);
-			return user;
+			contact.setResult(false);
+			contact.setMsg(I.MSG_CONTACT_FIRENDED);
+			return contact;
 		}
 		int myuid=findIdByUserName(userName);
 		int cuid=findIdByUserName(name);
+		contact.setResult(false);
+		contact.setMsg(I.MSG_CONTACT_FAIL);
+		ResultSet set = null;
 		PreparedStatement statement=null;
 		Connection connection = JdbcUtils.getConnection();
 		String sql="insert into "+I.Contact.TABLE_NAME
@@ -647,20 +746,21 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 			+")values(?,?,?,?)";
 		System.out.println("connection="+connection+",sql="+sql);
 		try {
-			statement=connection.prepareStatement(sql);
+			statement=connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			statement.setInt(1, myuid);
 			statement.setString(2, userName);
 			statement.setInt(3, cuid);
 			statement.setString(4, name);
-			int count = statement.executeUpdate();
-			if(count>0) {
-				user = findUserByUserName(name);
-				user.setResult(true);
-			} else {
-				user.setResult(false);
-				user.setMsg(I.MSG_CONTACT_FAIL);
-			}
-			return user;
+			statement.executeUpdate();
+			set = statement.getGeneratedKeys();
+			if(set!=null && set.next()){
+				int id = set.getInt(1);
+				if(id>0){
+					contact = findContactById(id);
+					contact.setResult(true);
+				}
+			}			
+			return contact;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{

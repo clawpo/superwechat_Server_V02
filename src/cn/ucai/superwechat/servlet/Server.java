@@ -70,6 +70,9 @@ public class Server extends HttpServlet {
 		case I.REQUEST_DOWNLOAD_CONTACT_LIST:
 			downloadContactList(request, response);
 			break;
+		case I.REQUEST_DOWNLOAD_CONTACT_ALL_LIST:
+			downloadContactAllList(request, response);
+			break;
 		case I.REQUEST_ADD_CONTACT:
 			addContact(request, response);
 			break;
@@ -603,7 +606,24 @@ public class Server extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * 下载好友集合
+	 * @param request
+	 * @param response
+	 */
+	private void downloadContactAllList(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userName = request.getParameter(I.Contact.USER_NAME);
+		Contact[] contacts = biz.findContactsByUserName(userName);
+		ObjectMapper om = new ObjectMapper();
+		 try {
+			 om.writeValue(response.getOutputStream(), contacts);
+		 }catch(IOException e){
+			 e.printStackTrace();
+		 }
+	}
+	
 	/**
 	 * 下载好友集合
 	 * @param request

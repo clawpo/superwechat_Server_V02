@@ -115,6 +115,31 @@ public interface ISuperWeChatDao {
 	Contact findContactById(int myuid,int cuid);
 
 	/**
+	 * 根据id查找好友数据
+	 * @param id
+	 * @return
+	 */
+	Contact findContactById(int id);
+
+	/**
+	 * 根据用户账号查找好友集合
+	 * @param userName
+	 * @param pageId
+	 * @param pageSize
+	 * @return
+	 */
+	Contact[] findContactsByUserName(String userName);
+
+	/**
+	 * 根据用户id查找好友集合
+	 * @param myuid
+	 * @param pageId
+	 * @param pageSize
+	 * @return
+	 */
+	Contact[] findContactListByMyuid(int myuid);
+	
+	/**
 	 * 根据用户账号查找好友集合
 	 * @param userName
 	 * @param pageId
@@ -138,7 +163,7 @@ public interface ISuperWeChatDao {
 	 * @param name
 	 * @return
 	 */
-	User addContact(String userName,String name);
+	Contact addContact(String userName,String name);
 
 	/**
 	 * 删除好友

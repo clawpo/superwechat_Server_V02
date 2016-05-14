@@ -98,6 +98,22 @@ public interface ISuperWeChatBiz {
 	 * @param pageSize
 	 * @return
 	 */
+	Contact[] findContactsByUserName(String userName);
+	/**
+	 * 根据用户id查找好友集合
+	 * @param myuid
+	 * @param pageId
+	 * @param pageSize
+	 * @return
+	 */
+	Contact[] findContactListByMyuid(int myuid);
+	/**
+	 * 根据用户账号查找好友集合
+	 * @param userName
+	 * @param pageId
+	 * @param pageSize
+	 * @return
+	 */
 	Contact[] findContactsByUserName(String userName,int pageId,int pageSize);
 	/**
 	 * 根据用户id查找好友集合

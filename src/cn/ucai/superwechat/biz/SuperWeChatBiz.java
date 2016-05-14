@@ -134,6 +134,18 @@ public class SuperWeChatBiz implements ISuperWeChatBiz {
 	}
 
 	@Override
+	public Contact[] findContactsByUserName(String userName) {
+		Contact[] contacts = dao.findContactsByUserName(userName);
+		return contacts;
+	}
+
+	@Override
+	public Contact[] findContactListByMyuid(int myuid) {
+		Contact[] contacts = dao.findContactListByMyuid(myuid);
+		return contacts;
+	}
+	
+	@Override
 	public Contact[] findContactsByUserName(String userName, int pageId, int pageSize) {
 		Contact[] contacts = dao.findContactsByUserName(userName, pageId, pageSize);
 		return contacts;
