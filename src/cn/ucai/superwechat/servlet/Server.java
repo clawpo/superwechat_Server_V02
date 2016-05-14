@@ -598,10 +598,10 @@ public class Server extends HttpServlet {
 			HttpServletResponse response) {
 		String userName = request.getParameter(I.Contact.USER_NAME);
 		String name = request.getParameter(I.Contact.CU_NAME);
-		User user = biz.addContact(userName, name);
+		Contact contact = biz.addContact(userName, name);
 		ObjectMapper om = new ObjectMapper();
 		try {
-			om.writeValue(response.getOutputStream(), user);
+			om.writeValue(response.getOutputStream(), contact);
 		}catch(IOException e){
 			e.printStackTrace();
 		}

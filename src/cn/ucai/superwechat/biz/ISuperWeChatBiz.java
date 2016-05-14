@@ -129,7 +129,7 @@ public interface ISuperWeChatBiz {
 	 * @param name
 	 * @return
 	 */
-	User addContact(String userName,String name);
+	Contact addContact(String userName,String name);
 	/**
 	 * 删除好友
 	 * @param myuid

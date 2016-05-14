@@ -158,7 +158,7 @@ public class SuperWeChatBiz implements ISuperWeChatBiz {
 	}
 
 	@Override
-	public User addContact(String userName, String name) {
+	public Contact addContact(String userName, String name) {
 		return dao.addContact(userName, name);
 	}
 
