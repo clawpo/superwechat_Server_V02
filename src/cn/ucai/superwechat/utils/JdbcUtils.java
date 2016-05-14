@@ -20,7 +20,7 @@ public class JdbcUtils {
 	public static Connection getConnection(){
 		try{
 			Connection connection = DriverManager.getConnection(
-				"jdbc:sqlite://Users/clawpo/work/ucai/work/projects/SuperWeChat/superqq/SuperQQ3.db");
+				"jdbc:sqlite://Users/clawpo/work/ucai/work/projects/SuperWeChat/teaching/201603/superwechatDB/superwechat_v03.db");
 			
 			System.out.println("JdbcUtils*****connection="+connection);
 			return connection;
