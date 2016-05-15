@@ -201,13 +201,13 @@ public interface ISuperWeChatBiz {
 	 * @param memberName
 	 * @return
 	 */
-	boolean addGroupMembers(String userIds,String userNames,String groupId,String hxid);
+	boolean addGroupMembers(String userIds,String userNames,String hxid);
 	/**
 	 * 添加群组成员
 	 * @param group
 	 * @return
 	 */
-	boolean addGroupMember(Member member);
+	Group addGroupMember(int userId,String userName,String hxid,int permission);
 	/**
 	 * 根据群组id下载所有群组成员
 	 * @param groupId

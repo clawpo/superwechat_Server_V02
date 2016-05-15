@@ -251,20 +251,33 @@ public class SuperWeChatBiz implements ISuperWeChatBiz {
 
 
 	@Override
-	public boolean addGroupMember(Member member) {
-		return dao.addGroupMember(member);
+	public Group addGroupMember(int userId,String userName,String hxid, int permission) {
+		Group group = dao.findGroupByGroupHXID(hxid);
+		if(group!=null){
+			Member member = new Member(userId, userName, 
+					group.getMGroupId(), hxid, permission);
+			boolean isSuccess = dao.addGroupMember(member);
+			if(isSuccess){
+				return group;
+			}
+		}
+		return null;
 	}
 	@Override
-	public boolean addGroupMembers(String userIds,String userNames,String groupId,String hxid) {
-		String[] userIdArray = userIds.split(",");
-		String[] userNameArray = userNames.split(",");
-		Member[] members = new Member[userIdArray.length];
-		for(int i=0;i<userIdArray.length;i++){
-			Member member = new Member(Integer.parseInt(userIdArray[i]), userNameArray[i], 
-					Integer.parseInt(groupId), hxid, I.PERMISSION_NORMAL);
-			members[i] = member;
+	public boolean addGroupMembers(String userIds,String userNames,String hxid) {
+		Group group = dao.findGroupByGroupHXID(hxid);
+		if(group!=null){
+			String[] userIdArray = userIds.split(",");
+			String[] userNameArray = userNames.split(",");
+			Member[] members = new Member[userIdArray.length];
+			for(int i=0;i<userIdArray.length;i++){
+				Member member = new Member(Integer.parseInt(userIdArray[i]), userNameArray[i], 
+						group.getMGroupId(), hxid, I.PERMISSION_NORMAL);
+				members[i] = member;
+			}
+			return dao.addGroupMembers(members);
 		}
-		return dao.addGroupMembers(members);
+		return false;
 	}
 	@Override
 	public Member[] downloadGroupMembers(int groupId) {

@@ -401,9 +401,8 @@ public class Server extends HttpServlet {
 			HttpServletResponse response) {
 		String userIds = request.getParameter(I.Member.USER_ID);
 		String userNames = request.getParameter(I.Member.USER_NAME);
-		String groupId = request.getParameter(I.Member.GROUP_ID);
 		String hxid = request.getParameter(I.Member.GROUP_HX_ID);
-		boolean isSuccess = biz.addGroupMembers(userIds,userNames,groupId,hxid);
+		boolean isSuccess = biz.addGroupMembers(userIds,userNames,hxid);
 		ObjectMapper om = new ObjectMapper();
 		try {
 			if(isSuccess){
@@ -425,15 +424,14 @@ public class Server extends HttpServlet {
 			HttpServletResponse response) {
 		String userId = request.getParameter(I.Member.USER_ID);
 		String userName = request.getParameter(I.Member.USER_NAME);
-		String groupId = request.getParameter(I.Member.GROUP_ID);
 		String hxid = request.getParameter(I.Member.GROUP_HX_ID);
-		Member member = new Member(Integer.parseInt(userId), userName, 
-				Integer.parseInt(groupId), hxid, I.PERMISSION_NORMAL);
-		boolean isSuccess = biz.addGroupMember(member);
+		Group group = biz.addGroupMember(Integer.parseInt(userId),userName,hxid,I.PERMISSION_NORMAL);
 		ObjectMapper om = new ObjectMapper();
 		try {
-			if(isSuccess){
-				om.writeValue(response.getOutputStream(), new Message(true, I.MSG_GROUP_ADD_MEMBER_SCUUESS));
+			if(group!=null){
+				group.setResult(true);
+				group.setMsg(I.MSG_GROUP_ADD_MEMBER_SCUUESS);
+				om.writeValue(response.getOutputStream(), group);
 			} else {
 				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_GROUP_ADD_MEMBER_FAIL));
 			}
@@ -809,9 +807,8 @@ public class Server extends HttpServlet {
 						isSuccess = biz.updateAvatar(id, hxid, I.AVATAR_TYPE_GROUP);
 						if(isSuccess){
 							String userId = request.getParameter(I.User.USER_ID);
-							Member member = new Member(Integer.parseInt(userId), owner, id, hxid, I.PERMISSION_OWNER);
-							isSuccess = biz.addGroupMember(member);
-							if(isSuccess){
+							Group g = biz.addGroupMember(Integer.parseInt(userId),owner,hxid,I.PERMISSION_OWNER);
+							if(g!=null){
 								om.writeValue(response.getOutputStream(), new Message(true, I.MSG_GROUP_CREATE_SCUUESS));
 							} else {
 								om.writeValue(response.getOutputStream(), new Message(false, I.MSG_GROUP_ADD_MEMBER_FAIL));
