@@ -831,7 +831,9 @@ public class Server extends HttpServlet {
 							String userId = request.getParameter(I.User.USER_ID);
 							Group g = biz.addGroupMember(Integer.parseInt(userId),owner,hxid,I.PERMISSION_OWNER);
 							if(g!=null){
-								om.writeValue(response.getOutputStream(), new Message(true, I.MSG_GROUP_CREATE_SCUUESS));
+								g.setResult(true);
+								g.setMsg(I.MSG_GROUP_CREATE_SCUUESS);
+								om.writeValue(response.getOutputStream(), g);
 							} else {
 								om.writeValue(response.getOutputStream(), new Message(false, I.MSG_GROUP_ADD_MEMBER_FAIL));
 							}
