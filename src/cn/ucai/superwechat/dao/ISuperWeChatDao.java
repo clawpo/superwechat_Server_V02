@@ -39,6 +39,15 @@ public interface ISuperWeChatDao {
 	User[] findUsersByNick(String nick,int pageId,int pageSize);
 
 	/**
+	 * 根据昵称或者用户名查找用户集合，模糊查询
+	 * @param nick
+	 * @param pageId
+	 * @param pageSize
+	 * @return
+	 */
+	User[] findUsersForSearch(String nick,int pageId,int pageSize);
+
+	/**
 	 * 查找附近的人，根据上线时间排序
 	 * @param userName
 	 * @param pageId

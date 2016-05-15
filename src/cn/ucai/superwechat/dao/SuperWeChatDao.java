@@ -219,6 +219,41 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 		}
 		return null;
 	}
+	
+
+	@Override
+	public User[] findUsersForSearch(String nick, int pageId, int pageSize) {
+		ResultSet set = null;
+		PreparedStatement statement = null;
+		Connection connection = JdbcUtils.getConnection();
+		String sql = "select * from " + I.User.TABLE_NAME 
+				+ SQL_QUERY_AVATAR
+				+ " where " + I.User.NICK + " like ?" 
+				+ " or " + I.User.USER_NAME + " like ?"
+				+ SQL_COMPARE_USER_NAME_AVATAR
+				+ SQL_COMPARE_AVATAR_USER
+				+ " limit ?,?";
+		System.out.println("connection="+connection+",sql="+sql);
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, "%"+nick+"%");
+			statement.setString(2, "%"+nick+"%");
+			statement.setInt(3, pageId);
+			statement.setInt(4, pageSize);
+			set = statement.executeQuery();
+			User[] users = new User[0];
+			while(set.next()){
+				User user = new User();
+				readUser(set, user);
+				readAvatar(set, user);
+				users = Utils.add(users, user);
+			}
+			return users;
+		}catch (SQLException e){
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	@Override
 	public User[] findUsers4Location(String userName, int pageId, int pageSize) {

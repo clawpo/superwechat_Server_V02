@@ -88,6 +88,9 @@ public class Server extends HttpServlet {
 		case I.REQUEST_FIND_USERS_BY_NICK:
 			findUsersByNick(request, response);
 			break;
+		case I.REQUEST_FIND_USERS_FOR_SEARCH:
+			findUsersForSearch(request, response);
+			break;
 		case I.REQUEST_UPLOAD_LOCATION:
 			uploadLocation(request, response);
 			break;
@@ -561,6 +564,25 @@ public class Server extends HttpServlet {
 		int pageId = Integer.parseInt(request.getParameter(I.PAGE_ID));
 		int pageSize = Integer.parseInt(request.getParameter(I.PAGE_SIZE));
 		User[] user = biz.findUsersByNick(nick,pageId,pageSize);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), user);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 根据昵称或者用户名查找用户集合
+	 * @param request
+	 * @param response
+	 */
+	private void findUsersForSearch(HttpServletRequest request,
+			HttpServletResponse response) {
+		String nick = request.getParameter(I.User.NICK);
+		int pageId = Integer.parseInt(request.getParameter(I.PAGE_ID));
+		int pageSize = Integer.parseInt(request.getParameter(I.PAGE_SIZE));
+		User[] user = biz.findUsersForSearch(nick,pageId,pageSize);
 		ObjectMapper om = new ObjectMapper();
 		try {
 			om.writeValue(response.getOutputStream(), user);
