@@ -115,6 +115,12 @@ public class Server extends HttpServlet {
 		case I.REQUEST_DOWNLOAD_GROUP_MEMBERS_BY_LIMIT:
 			downloadGroupMembersByLimit(request,response);
 			break;
+		case I.REQUEST_DOWNLOAD_GROUP_MEMBERS_BY_HXID:
+			downloadGroupMembersByHXID(request,response);
+			break;
+		case I.REQUEST_DOWNLOAD_GROUP_MEMBERS_BY_HXID_LIMIT:
+			downloadGroupMembersByHXIDLimit(request,response);
+			break;
 		case I.REQUEST_DELETE_GROUP_MEMBER:
 			deleteGroupMember(request,response);
 			break;
@@ -341,6 +347,41 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 下载群组成员，并分页显示
+	 * @param request
+	 * @param response
+	 */
+	private void downloadGroupMembersByHXIDLimit(HttpServletRequest request,
+			HttpServletResponse response) {
+		String hxid = request.getParameter(I.Member.GROUP_HX_ID);
+		int pageId = Integer.parseInt(request.getParameter(I.PAGE_ID));
+		int pageSize = Integer.parseInt(request.getParameter(I.PAGE_SIZE));
+		Member[] members = biz.downloadGroupMembersByHXID(hxid, pageId, pageSize);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), members);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 下载所有群组成员
+	 * @param request
+	 * @param response
+	 */
+	private void downloadGroupMembersByHXID(HttpServletRequest request,
+			HttpServletResponse response) {
+		String hxid = request.getParameter(I.Member.GROUP_HX_ID);
+		Member[] members = biz.downloadGroupMembersByHXID(hxid);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), members);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * 下载群组成员，并分页显示
 	 * @param request

@@ -286,6 +286,17 @@ public class SuperWeChatBiz implements ISuperWeChatBiz {
 		return false;
 	}
 	@Override
+	public Member[] downloadGroupMembersByHXID(String hxid) {
+		if(hxid==null) return null;
+		return dao.findGroupMembersByHXID(hxid);
+	}
+	
+	@Override
+	public Member[] downloadGroupMembersByHXID(String hxid,int pageId,int pageSize) {
+		if(hxid==null) return null;
+		return dao.findGroupMembersByHXID(hxid,pageId,pageSize);
+	}
+	@Override
 	public Member[] downloadGroupMembers(int groupId) {
 		if(groupId<=0) return null;
 		return dao.findGroupMembersByGroupId(groupId);

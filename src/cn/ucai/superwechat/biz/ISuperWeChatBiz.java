@@ -221,6 +221,20 @@ public interface ISuperWeChatBiz {
 	 * @param groupId
 	 * @return
 	 */
+	Member[] downloadGroupMembersByHXID(String hxid);
+	/**
+	 * 根据群组id下载所有群组成员,分页显示
+	 * @param groupId
+	 * @param pageId
+	 * @param pageSize
+	 * @return
+	 */
+	Member[] downloadGroupMembersByHXID(String hxid,int pageId,int pageSize);
+	/**
+	 * 根据群组id下载所有群组成员
+	 * @param groupId
+	 * @return
+	 */
 	Member[] downloadGroupMembers(int groupId);
 	/**
 	 * 根据群组id下载所有群组成员,分页显示

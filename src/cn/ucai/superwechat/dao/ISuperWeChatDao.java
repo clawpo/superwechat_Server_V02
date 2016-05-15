@@ -280,6 +280,20 @@ public interface ISuperWeChatDao {
 	boolean deleteGroupMember(int groupId, String memberName);
 
 	/**
+	 * 根据群组环信id查询所有群组成员
+	 * @param groupId
+	 * @return
+	 */
+	Member[] findGroupMembersByHXID(String hxid);
+	/**
+	 * 根据群组环信id查询所有群组成员,并分页显示
+	 * @param groupId
+	 * @param pageId
+	 * @param pageSize
+	 * @return
+	 */
+	Member[] findGroupMembersByHXID(String hxid, int pageId, int pageSize);
+	/**
 	 * 根据群组id查询所有群组成员
 	 * @param groupId
 	 * @return

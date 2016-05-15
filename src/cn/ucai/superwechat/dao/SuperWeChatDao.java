@@ -1225,7 +1225,77 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 		}
 		return null;
 	}
-	
+
+	@Override
+	public Member[] findGroupMembersByHXID(String hxid) {
+		PreparedStatement statement=null;
+		ResultSet set=null;
+		Connection connection = JdbcUtils.getConnection();
+		String sql="select * from "+I.Member.TABLE_NAME
+			+ SQL_QUERY_USER + SQL_QUERY_AVATAR
+			+" where "+I.Member.GROUP_ID+"=?"
+			+ SQL_COMPARE_USER_ID_MEMBER
+			+ SQL_COMPARE_USER_ID_AVATAR
+			+ SQL_COMPARE_AVATAR_USER;
+		System.out.println("connection="+connection+",sql="+sql);
+		try {
+			statement=connection.prepareStatement(sql);
+			statement.setString(1, hxid);
+			set=statement.executeQuery();
+			Member[] members = new Member[0];
+			while(set.next()){
+				Member m = new Member();
+				readMember(set, m);
+				readUser(set, m);
+				readAvatar(set, m);
+				members = Utils.add(members, m);
+			}
+			return members;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			JdbcUtils.closeAll(set, statement, connection);
+		}
+		return null;
+	}
+
+	@Override
+	public Member[] findGroupMembersByHXID(String hxid, int pageId, int pageSize) {
+		PreparedStatement statement=null;
+		ResultSet set=null;
+		Connection connection = JdbcUtils.getConnection();
+		String sql="select * from "+I.Member.TABLE_NAME
+			+ SQL_QUERY_USER + SQL_QUERY_AVATAR
+			+" where "+I.Member.GROUP_HX_ID+"=?"
+			+ SQL_COMPARE_USER_ID_MEMBER
+			+ SQL_COMPARE_USER_ID_AVATAR
+			+ SQL_COMPARE_AVATAR_USER
+			+ "limit ?,?";
+		System.out.println("connection="+connection+",sql="+sql);
+		try {
+			statement=connection.prepareStatement(sql);
+			statement.setString(1, hxid);
+			statement.setInt(2, pageId);
+			statement.setInt(3, pageSize);
+			set=statement.executeQuery();
+			Member[] members = new Member[0];
+			while(set.next()){
+				Member m = new Member();
+				readMember(set, m);
+				readUser(set, m);
+				readAvatar(set, m);
+				members = Utils.add(members, m);
+			}
+			return members;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			JdbcUtils.closeAll(set, statement, connection);
+		}
+		return null;
+	}
 
 	@Override
 	public Member[] findGroupMembersByGroupId(int groupId) {
