@@ -1236,7 +1236,7 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 		Connection connection = JdbcUtils.getConnection();
 		String sql="select * from "+I.Member.TABLE_NAME
 			+ SQL_QUERY_USER + SQL_QUERY_AVATAR
-			+" where "+I.Member.GROUP_ID+"=?"
+			+" where "+I.Member.GROUP_HX_ID+"=?"
 			+ SQL_COMPARE_USER_ID_MEMBER
 			+ SQL_COMPARE_USER_ID_AVATAR
 			+ SQL_COMPARE_AVATAR_USER;
