@@ -48,6 +48,7 @@ public class Server extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		String requestType = request.getParameter(I.KEY_REQUEST);
 		System.out.println("doGet requestType="+requestType);
+		response.setContentType("text/html;charset=utf-8");
 		if(requestType == null){
 			return;
 		}
