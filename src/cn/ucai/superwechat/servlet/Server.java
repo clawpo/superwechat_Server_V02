@@ -271,7 +271,7 @@ public class Server extends HttpServlet {
 	}
 
 	/**
-	 * 删除用户所有群组
+	 * 下载用户所有群组
 	 * @param request
 	 * @param response
 	 */
