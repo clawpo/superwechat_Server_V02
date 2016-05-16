@@ -944,7 +944,7 @@ public class Server extends HttpServlet {
 					nick = new String(nick.getBytes(I.ISON8859_1), I.UTF_8);
 					String password = request.getParameter(I.User.PASSWORD);
 					// 步骤4-将三个数据封装在一个UserBean对象中
-					User user = new User(I.ID_DEFAULT,userName, nick, password,I.UN_READ_MSG_COUNT_DEFAULT);
+					User user = new User(I.ID_DEFAULT,userName, password, nick,I.UN_READ_MSG_COUNT_DEFAULT);
 					// 步骤5-调用业务逻辑层的方法进行注册
 					int id = biz.register(user);
 					System.out.println("register user,id="+id);
@@ -981,11 +981,11 @@ public class Server extends HttpServlet {
 		String path;
 		switch (type) {
 		case I.AVATAR_TYPE_USER:
-			path = I.AVATAR_PATH + I.BACKSLASH + I.AVATAR_TYPE_USER_PATH;
+			path = I.AVATAR_PATH + I.AVATAR_TYPE_USER_PATH + I.BACKSLASH;
 			break;
 		case I.AVATAR_TYPE_GROUP:
 		default:
-			path = I.AVATAR_PATH + I.BACKSLASH + I.AVATAR_TYPE_GROUP_PATH;
+			path = I.AVATAR_PATH + I.AVATAR_TYPE_GROUP_PATH + I.BACKSLASH;
 			break;
 		}
 		String fileName = name + I.AVATAR_SUFFIX_JPG;
