@@ -969,7 +969,8 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 			+ SQL_QUERY_GROUP + SQL_QUERY_AVATAR
 			+ " where "+I.Member.USER_NAME+"=?"
 			+ SQL_COMPARE_GROUP_ID_MEMBER
-			+ SQL_COMPARE_AVATAR_GROUP;
+			+ SQL_COMPARE_AVATAR_GROUP
+			+ SQL_COMPARE_GROUP_ID_AVATAR;
 		System.out.println("connection="+connection+",sql="+sql);
 		try {
 			statement=connection.prepareStatement(sql);
