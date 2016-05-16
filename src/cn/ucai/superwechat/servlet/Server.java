@@ -828,6 +828,7 @@ public class Server extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException,IOException{
 		String requestType = request.getParameter(I.KEY_REQUEST);
+		System.out.println("doGet requestType="+requestType);
 		switch(requestType){
 			case I.REQUEST_REGISTER:
 				register(request, response);

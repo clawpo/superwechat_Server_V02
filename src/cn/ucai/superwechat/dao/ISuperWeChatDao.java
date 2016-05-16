@@ -195,7 +195,7 @@ public interface ISuperWeChatDao {
 	 * @param group
 	 * @return
 	 */
-	Group createGroup(Group group);
+	int createGroup(Group group);
 	
 	/**
 	 * 更新群名称

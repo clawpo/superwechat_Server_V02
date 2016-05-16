@@ -188,8 +188,8 @@ public class SuperWeChatBiz implements ISuperWeChatBiz {
 
 	@Override
 	public int createGroup(Group group) {
-		Group g = dao.createGroup(group);
-		return g!=null?g.getMGroupId():0;
+		int id = dao.createGroup(group);
+		return id;
 	}
 
 	@Override

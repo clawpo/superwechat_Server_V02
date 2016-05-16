@@ -849,7 +849,7 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 	}
 
 	@Override
-	public Group createGroup(Group group) {
+	public int createGroup(Group group) {
 		ResultSet set=null;
 		PreparedStatement statement=null;
 		Connection connection = JdbcUtils.getConnection();
@@ -880,14 +880,15 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 			set = statement.getGeneratedKeys();
 			if(set!=null && set.next()){
 				int id = set.getInt(1);
-				return findGroupByGroupId(id); 
+				System.out.println("dao.createGroup,id="+id);
+				return id; 
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
 			JdbcUtils.closeAll(null, statement, connection);
 		}
-		return null;
+		return 0;
 	}
 
 	@Override
@@ -1069,6 +1070,7 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 				Group group = new Group();
 				readGroup(set, group);
 				readAvatar(set, group);
+				System.out.println("dao.findGroupByGroupId="+group);
 				return group;
 			}
 		} catch (SQLException e) {
@@ -1094,7 +1096,7 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 		System.out.println("connection="+connection+",sql="+sql);
 		try {
 			statement=connection.prepareStatement(sql);
-			statement.setInt(1, member.getMMemberId());
+			statement.setInt(1, member.getMMemberUserId());
 			statement.setString(2, member.getMMemberUserName());
 			statement.setInt(3, member.getMMemberGroupId());
 			statement.setString(4, member.getMMemberGroupHxid());
