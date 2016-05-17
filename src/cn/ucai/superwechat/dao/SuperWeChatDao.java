@@ -1438,7 +1438,7 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 		PreparedStatement statement=null;
 		Connection connection = JdbcUtils.getConnection();
 		String sql="delete from "+I.Member.TABLE_NAME
-			+" where "+I.Group.GROUP_ID+"=?";
+			+" where "+I.Member.GROUP_ID+"=?";
 		System.out.println("connection="+connection+",sql="+sql);
 		try {
 			statement=connection.prepareStatement(sql);
