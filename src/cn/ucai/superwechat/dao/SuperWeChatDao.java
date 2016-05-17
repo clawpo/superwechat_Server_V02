@@ -1171,10 +1171,8 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 			statement=connection.prepareStatement(sql);
 			statement.setString(1, memberName);
 			statement.setInt(2, groupId);
-			statement.addBatch();
-//			statement.setInt(1, groupId);
-//			statement.addBatch(sql_updateString);
-			statement.executeBatch();
+			int count = statement.executeUpdate();
+			return count>0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			try {

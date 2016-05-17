@@ -264,6 +264,9 @@ public class SuperWeChatBiz implements ISuperWeChatBiz {
 					group.getMGroupId(), hxid, permission);
 			boolean isSuccess = dao.addGroupMember(member);
 			if(isSuccess){
+				group.setMGroupLastModifiedTime(System.currentTimeMillis()+"");
+				int affiliationsCount = group.getMGroupAffiliationsCount()+1;
+				dao.updateGroupAffiliationsCount(group, affiliationsCount);
 				return group;
 			}
 		}
@@ -281,7 +284,12 @@ public class SuperWeChatBiz implements ISuperWeChatBiz {
 						group.getMGroupId(), hxid, I.PERMISSION_NORMAL);
 				members[i] = member;
 			}
-			return dao.addGroupMembers(members);
+			boolean isSuccess = dao.addGroupMembers(members);
+			if(isSuccess){
+				group.setMGroupLastModifiedTime(System.currentTimeMillis()+"");
+				int affiliationsCount = group.getMGroupAffiliationsCount()+userIdArray.length;
+				return dao.updateGroupAffiliationsCount(group, affiliationsCount);
+			}
 		}
 		return false;
 	}
@@ -310,19 +318,33 @@ public class SuperWeChatBiz implements ISuperWeChatBiz {
 
 	@Override
 	public boolean deleteGroupMember(int groupId,String memberName) {
-		return dao.deleteGroupMember(groupId, memberName);
+		Group group = dao.findGroupByGroupId(groupId);
+		boolean isSuccess = dao.deleteGroupMember(groupId, memberName);
+		if(isSuccess){
+			group.setMGroupLastModifiedTime(System.currentTimeMillis()+"");
+			int affiliationsCount = group.getMGroupAffiliationsCount()-1;
+			isSuccess = dao.updateGroupAffiliationsCount(group, affiliationsCount);
+			return isSuccess;
+		}
+		return isSuccess;
 	}
 	
 	@Override
 	public boolean deleteGroupMembers(int groupId,String memberNames) {
 		String[] memberNameArray = memberNames.split(",");
 		Member[] members = new Member[memberNameArray.length];
+		Group group = dao.findGroupByGroupId(groupId);
 		for(int i=0;i<memberNameArray.length;i++){
 			members[i] = new Member();
 			members[i].setMMemberGroupId(groupId);
 			members[i].setMMemberUserName(memberNameArray[i]);
 		}
-		return dao.deleteGroupMembers(members);
+		boolean isSuccess = dao.deleteGroupMembers(members);
+		if(isSuccess){
+			int affiliationsCount = group.getMGroupAffiliationsCount()-memberNameArray.length;
+			isSuccess = dao.updateGroupAffiliationsCount(group, affiliationsCount);
+		}
+		return isSuccess;
 	}
 
 	@Override
