@@ -74,8 +74,8 @@ public class SuperWeChatBiz implements ISuperWeChatBiz {
 	}
 	
 	@Override
-	public User[] findUsersForSearch(String nick,int pageId,int pageSize) {
-		User[] users = dao.findUsersForSearch(nick, pageId, pageSize);
+	public User[] findUsersForSearch(String nick,String username,int pageId,int pageSize) {
+		User[] users = dao.findUsersForSearch(nick,username, pageId, pageSize);
 		return users;
 	}
 

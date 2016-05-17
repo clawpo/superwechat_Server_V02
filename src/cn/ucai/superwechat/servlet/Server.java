@@ -622,9 +622,10 @@ public class Server extends HttpServlet {
 	private void findUsersForSearch(HttpServletRequest request,
 			HttpServletResponse response) {
 		String nick = request.getParameter(I.User.NICK);
+		String username = request.getParameter(I.User.USER_NAME);
 		int pageId = Integer.parseInt(request.getParameter(I.PAGE_ID));
 		int pageSize = Integer.parseInt(request.getParameter(I.PAGE_SIZE));
-		User[] user = biz.findUsersForSearch(nick,pageId,pageSize);
+		User[] user = biz.findUsersForSearch(nick,username,pageId,pageSize);
 		ObjectMapper om = new ObjectMapper();
 		try {
 			om.writeValue(response.getOutputStream(), user);

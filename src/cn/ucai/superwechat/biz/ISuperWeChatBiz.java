@@ -65,7 +65,7 @@ public interface ISuperWeChatBiz {
 	 * @param pageSize
 	 * @return
 	 */
-	User[] findUsersForSearch(String nick,int pageId,int pageSize);
+	User[] findUsersForSearch(String nick,String username,int pageId,int pageSize);
 	/**
 	 * 下载附近的人
 	 * @param userName

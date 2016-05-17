@@ -222,7 +222,7 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 	
 
 	@Override
-	public User[] findUsersForSearch(String nick, int pageId, int pageSize) {
+	public User[] findUsersForSearch(String nick,String username, int pageId, int pageSize) {
 		ResultSet set = null;
 		PreparedStatement statement = null;
 		Connection connection = JdbcUtils.getConnection();
@@ -237,7 +237,7 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, "%"+nick+"%");
-			statement.setString(2, "%"+nick+"%");
+			statement.setString(2, "%"+username+"%");
 			statement.setInt(3, pageId);
 			statement.setInt(4, pageSize);
 			set = statement.executeQuery();
