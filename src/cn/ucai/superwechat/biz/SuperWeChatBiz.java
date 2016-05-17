@@ -246,7 +246,11 @@ public class SuperWeChatBiz implements ISuperWeChatBiz {
 	@Override
 	public Group findGroupByGroupHXID(String hxid) {
 		if(hxid==null || hxid.isEmpty())return null;
-		return dao.findGroupByGroupHXID(hxid);
+		Group group = dao.findGroupByGroupHXID(hxid);
+		if(group!=null){
+			group.setResult(true);
+		}
+		return group;
 	}
 	
 	@Override
