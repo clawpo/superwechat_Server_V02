@@ -269,7 +269,7 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 				+ "and " + I.User.USER_ID + " in (select "
 				+ I.Location.USER_ID +" from " + I.Location.TABLE_NAME
 				+ " where " + I.Location.IS_SEARCHED + "=1"
-				+ "order by " + I.Location.UPDATE_TIME + " desc"
+				+ " order by " + I.Location.UPDATE_TIME + " desc"
 				+ ") limit ?,?";
 		System.out.println("connection="+connection+",sql="+sql);
 		try {
