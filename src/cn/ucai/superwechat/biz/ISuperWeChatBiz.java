@@ -221,6 +221,12 @@ public interface ISuperWeChatBiz {
 	 * @param group
 	 * @return
 	 */
+	Group addGroupMember(String userName,String hxid,int permission);
+	/**
+	 * 添加群组成员
+	 * @param group
+	 * @return
+	 */
 	Group addGroupMember(int userId,String userName,String hxid,int permission);
 	/**
 	 * 根据群组id下载所有群组成员

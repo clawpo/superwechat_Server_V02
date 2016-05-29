@@ -271,6 +271,23 @@ public class SuperWeChatBiz implements ISuperWeChatBiz {
 
 
 	@Override
+	public Group addGroupMember(String userName,String hxid, int permission) {
+		Group group = dao.findGroupByGroupHXID(hxid);
+		User user = dao.findUserByUserName(userName);
+		if(group!=null && user!=null){
+			Member member = new Member(user.getMUserId(), userName, 
+					group.getMGroupId(), hxid, permission);
+			boolean isSuccess = dao.addGroupMember(member);
+			if(isSuccess){
+				group.setMGroupLastModifiedTime(System.currentTimeMillis()+"");
+				int affiliationsCount = group.getMGroupAffiliationsCount()+1;
+				dao.updateGroupAffiliationsCount(group, affiliationsCount);
+				return group;
+			}
+		}
+		return null;
+	}
+	@Override
 	public Group addGroupMember(int userId,String userName,String hxid, int permission) {
 		Group group = dao.findGroupByGroupHXID(hxid);
 		if(group!=null){

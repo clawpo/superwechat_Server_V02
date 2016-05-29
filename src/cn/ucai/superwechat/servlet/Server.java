@@ -101,6 +101,9 @@ public class Server extends HttpServlet {
 		case I.REQUEST_DOWNLOAD_LOCATION:
 			downloadLocation(request, response);
 			break;
+		case I.REQUEST_ADD_GROUP_MEMBER_BY_USERNAME:
+			addGroupMemberByUserName(request,response);
+			break;
 		case I.REQUEST_ADD_GROUP_MEMBER:
 			addGroupMember(request,response);
 			break;
@@ -479,6 +482,29 @@ public class Server extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 添加群组成员
+	 * @param request
+	 * @param response
+	 */
+	private void addGroupMemberByUserName(HttpServletRequest request,
+			HttpServletResponse response) {
+		String userName = request.getParameter(I.Member.USER_NAME);
+		String hxid = request.getParameter(I.Member.GROUP_HX_ID);
+		Group group = biz.addGroupMember(userName,hxid,I.PERMISSION_NORMAL);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			if(group!=null){
+				group.setResult(true);
+				group.setMsg(I.MSG_GROUP_ADD_MEMBER_SCUUESS);
+				om.writeValue(response.getOutputStream(), group);
+			} else {
+				om.writeValue(response.getOutputStream(), new Message(false, I.MSG_GROUP_ADD_MEMBER_FAIL));
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * 添加群组成员
 	 * @param request
