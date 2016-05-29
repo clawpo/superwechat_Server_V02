@@ -72,7 +72,7 @@ public interface I {
 	int ID_DEFAULT									=		0;								//ID默认值
 	int UN_READ_MSG_COUNT_DEFAULT					=		0;								//未读消息数量默认值
 	int GROUP_MAX_USERS_DEFAULT 					= 		-1;								//群组最大人数默认值
-	int GROUP_AFFILIATIONS_COUNT_DEFAULT 			= 		1;								//群组最大人数默认值
+	int GROUP_AFFILIATIONS_COUNT_DEFAULT 			= 		0;								//群组人数默认值
 	int PERMISSION_NORMAL							= 		0;								//普通用户群组权限
 	int PERMISSION_OWNER							= 		1;								//群组所有者群组权限
 	int AVATAR_TYPE_USER							=		0;								//用户头像
@@ -95,7 +95,7 @@ public interface I {
 	int MSG_REGISTER_UPLOAD_AVATAR_FAIL				=		103;							//上传头像失败
 	int MSG_REGISTER_UPLOAD_AVATAR_SUCCESS			=		104;							//上传头像成功
 	int MSG_REGISTER_FAIL							=		105;							//注册失败
-	int MSG_UNREGISTER_SUCCESS						=  		106;							//注册成功
+	int MSG_UNREGISTER_SUCCESS						=  		106;							//取消注册成功
 	int MSG_UNREGISTER_FAIL							=		107;							//注册失败
 	int MSG_CONTACT_FIRENDED						=		201;							//已经是好友关系
 	int MSG_CONTACT_FAIL							=		202;							//好友关系
@@ -208,4 +208,6 @@ public interface I {
 	String REQUEST_FIND_GROUP_BY_ID					= 		"find_group_by_group_id";
 	/** 客户端发送的根据群组环信id查找群组请求 */
 	String REQUEST_FIND_GROUP_BY_HXID 				= 		"find_group_by_group_hxid";
+	/** 客户端发送的根据群组环信id查找公开群组请求 */
+	String REQUEST_FIND_PUBLIC_GROUP_BY_HXID 		= 		"find_public_group_by_group_hxid";
 }

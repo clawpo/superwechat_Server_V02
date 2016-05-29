@@ -146,6 +146,9 @@ public class Server extends HttpServlet {
 		case I.REQUEST_FIND_GROUP_BY_HXID:
 			findGroupByHXID(request,response);
 			break;
+		case I.REQUEST_FIND_PUBLIC_GROUP_BY_HXID:
+			findPublicGroupByHXID(request,response);
+			break;
 		case I.REQUEST_UPDATE_USER_NICK:
 			updateUserNickByName(request,response);
 			break;
@@ -203,6 +206,22 @@ public class Server extends HttpServlet {
 			HttpServletResponse response) {
 		String hxid = request.getParameter(I.Group.HX_ID);
 		Group group = biz.findGroupByGroupHXID(hxid);
+		ObjectMapper om = new ObjectMapper();
+		try {
+			om.writeValue(response.getOutputStream(), group);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * 根据群组环信id查找群组
+	 * @param request
+	 * @param response
+	 */
+	private void findPublicGroupByHXID(HttpServletRequest request,
+			HttpServletResponse response) {
+		String hxid = request.getParameter(I.Group.HX_ID);
+		Group group = biz.findPublicGroupByHXID(hxid);
 		ObjectMapper om = new ObjectMapper();
 		try {
 			om.writeValue(response.getOutputStream(), group);
@@ -859,6 +878,7 @@ public class Server extends HttpServlet {
 				isSuccess = uploadAvatar(hxid, I.AVATAR_TYPE_GROUP, request);
 				if(isSuccess){
 					String name = request.getParameter(I.Group.NAME);
+					name = new String(name.getBytes(I.ISON8859_1), I.UTF_8);
 					String disc = request.getParameter(I.Group.DESCRIPTION);
 					disc = new String(disc.getBytes(I.ISON8859_1), I.UTF_8);
 					String owner = request.getParameter(I.Group.OWNER);

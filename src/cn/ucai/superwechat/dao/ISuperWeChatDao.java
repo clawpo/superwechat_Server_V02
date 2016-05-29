@@ -249,6 +249,12 @@ public interface ISuperWeChatDao {
 	 * @return
 	 */
 	Group findGroupByGroupHXID(String hxid);
+	/**
+	 * 根据群组环信id查找公开群组列表
+	 * @param groupName
+	 * @return
+	 */
+	Group findPublicGroupByHXID(String hxid);
 
 	/**
 	 * 根据群组id查找群组

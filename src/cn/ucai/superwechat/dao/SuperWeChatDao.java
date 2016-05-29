@@ -40,6 +40,7 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 	private final String SQL_COMPARE_GROUP_ID_AVATAR = " and " + I.Group.GROUP_ID + "=" + I.Avatar.USER_ID + " ";
 //	private final String SQL_COMPARE_GROUP_HXID_AVATAR = " and " + I.Group.HX_ID + "=" + I.Avatar.USER_NAME + " ";
 	private final String SQL_COMPARE_USER_ID_MEMBER = " and " + I.User.USER_ID + "=" + I.Member.USER_ID + " ";
+	private final String SQL_COMPARE_PUBLIC_GROUP = " and " + I.Group.IS_PUBLIC + "=1 ";
 
 	@Override
 	public User findUserByUserName(String userName) {
@@ -1033,6 +1034,36 @@ public class SuperWeChatDao implements ISuperWeChatDao {
 			+" where "+I.Group.HX_ID+"=?"
 			+ SQL_COMPARE_GROUP_ID_AVATAR
 			+ SQL_COMPARE_AVATAR_GROUP;
+		System.out.println("connection="+connection+",sql="+sql);
+		try {
+			statement=connection.prepareStatement(sql);
+			statement.setString(1, hxid);
+			set=statement.executeQuery();
+			if(set.next()){
+				Group group = new Group();
+				readGroup(set,group);
+				readAvatar(set, group);
+				return group;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			JdbcUtils.closeAll(set, statement, connection);
+		}
+		return null;
+	}
+
+	@Override
+	public Group findPublicGroupByHXID(String hxid) {
+		PreparedStatement statement=null;
+		ResultSet set=null;
+		Connection connection = JdbcUtils.getConnection();
+		String sql="select * from "+I.Group.TABLE_NAME
+			+ SQL_QUERY_AVATAR
+			+" where "+I.Group.HX_ID+"=?"
+			+ SQL_COMPARE_GROUP_ID_AVATAR
+			+ SQL_COMPARE_AVATAR_GROUP
+			+ SQL_COMPARE_PUBLIC_GROUP;
 		System.out.println("connection="+connection+",sql="+sql);
 		try {
 			statement=connection.prepareStatement(sql);
